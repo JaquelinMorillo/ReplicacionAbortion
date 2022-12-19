@@ -1,0 +1,231 @@
+---
+title: "Replicación Abortion legalization and long-term gonorrhea incidence"
+author: "Jaquelin Morillo"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+```
+
+https://mixtape.scunning.com/09-difference_in_differences#abortion-legalization-and-long-term-gonorrhea-incidence
+
+_Github:_ https://github.com/JaquelinMorillo/ReplicacionAbortion
+
+### 1. Introducción
+<div style="text-align: justify">
+Gruber, Levine y Staiger (1999) querían conocer las características del niño marginal abortado si hubiera llegado a la adolescencia. Los autores descubrieron que el niño marginal abortado tenía un 60% más de probabilidades de crecer en un hogar monoparental, un 50% más de probabilidades de vivir en la pobreza y un 45% más de probabilidades de recibir asistencia social. Está claro que el aborto precoz tiene un fuerte efecto de selección de las familias con menos recursos. En esta linea, Levitt (2004) atribuyó hasta un 10% del descenso de la delincuencia entre 1991 y 2001 a la legalización del aborto en los años setenta.Este estudio fue, como era de esperar, increíblemente controvertido. Si bien muchas de las críticas fueron infundadas desde una perspectiva científica, otras se enfocaron en el propio diseño y ejecución de la investigación. Por ejemplo, Ted Joyce (2009), experto en salud reproductiva, puso en duda la hipótesis aborto-delito utilizando un diseño Diseño de tendencias paralelas (DDD) (Joyce 2009) Argumentando que si la legalización del aborto tuviera una selección negativa tan extrema, entonces no debería aparecer sólo en la delincuencia sino también en otras dimensiones del análisis. En este marco, Cunningham y Cornwell (2013) estimó los efectos de la legalización del aborto en la incidencia de la gonorrea a largo plazo.
+<div/>
+<br>
+<div style="text-align: justify">
+A diferencia de Donohue y Levitt (2001) en cuyo estudio utilizaron valores retardados a nivel estatal de un coeficiente de aborto,Cunningham y Cornwell (2013) utilizaron diferencias en diferencias. Para ello los autores explotaron la derogación temprana del aborto en cinco estados en 1970 y los compararon con los estados que fueron legalizados bajo Roe v. Wade en 1973. Se utilizaron los datos de gonorrea de los Centros para el Control y la Prevención de Enfermedades de los Estados Unidos (CDC) desglosados en categorías de edad de cinco años (por ejemplo, 15-19 años, 20-24 años). La teoría de la legalización del aborto predijo la forma de los efectos del tratamiento observado en una adopción escalonada. En concreto, deberíamos observar efectos de tratamiento no lineales. Estos efectos de tratamiento deberían ser cada vez más negativos de 1986 a 1989, estabilizarse de 1989 a 1991, y luego disiparse gradualmente hasta 1992. En otras palabras, la hipótesis de la legalización del aborto predice un efecto parabólico del tratamiento a medida que las cohortes tratadas se mueven a través de la distribución de edades. Si no es posible encontrar pruebas de una parábola negativa durante esta ventana específica y estrecha, entonces la hipótesis de la legalización del aborto está más cerca de ser falseada.
+<div/>
+
+### 2. Modelo
+
+<div style="text-align: justify">
+En este contexto, los autores plantearon el siguiente modelo:
+
+$$Y_st = \beta_1Repeals + \beta_2DT_t + \beta_3 Repeal_s DT_t + X_st\psi +\alpha_sDS_s+\varepsilon_{st}$$
+donde $Y$ es el número logarítmico de nuevos casos de gonorrea en jóvenes de 15 a 19 años (por cada 100.000 habitantes); $Repeal_s$ es igual a 1 si el estado legalizó el aborto antes de Roe; $DT_t$ es una variable dummy de año; $DS_s$ es una variable dummy de estado; $t$ es una tendencia temporal; $X$ es una matriz de covariables. En el documento, a veces incluía tendencias lineales específicas del estado, pero para este análisis, presento el modelo más simple. Por último, $\varepsilon_{st}$ es un término de error estructural que se supone condicionalmente independiente de los regresores. Además, todos los errores estándar fueron agruparon a nivel estatal, lo que permite una correlación serial arbitraria.
+<div/>
+<br>
+<div style="text-align: justify">
+A contuinuación se presentan los coeficientes de forma gráfica, donde es posible observar qye hay un efecto negativo durante la ventana en la que Roe no se ha puesto totalmente al día, y ese efecto negativo forma una parábola, tal y como predecía nuestra teoría.
+<div/>
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#-- DD estimate of 15-19 year olds in repeal states vs Roe states
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal = as_factor(repeal),
+    year   = as_factor(year),
+    fip    = as_factor(fip),
+    fa     = as_factor(fa),
+  )
+
+reg <- abortion %>% 
+  filter(bf15 == 1) %>% 
+  lm_robust(lnr ~ repeal*year + fip + acc + ir + pi + alcohol+ crack + poverty+ income+ ur,
+            data = ., weights = totpop, clusters = fip)
+
+abortion_plot <- tibble(
+  sd = reg[[2]][76:90],
+  mean = reg[[1]][76:90],
+  year = c(1986:2000))
+
+abortion_plot %>% 
+  ggplot(aes(x = year, y = mean)) + 
+  geom_rect(aes(xmin=1986, xmax=1992, ymin=-Inf, ymax=Inf), fill = "#FC00B4", alpha = 0.01)+
+  geom_point()+
+  geom_text(aes(label = year), hjust=-0.002, vjust = -0.03)+
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = mean - sd*1.96, ymax = mean + sd*1.96), width = 0.2,
+                position = position_dodge(0.05))
+```
+
+<div style="text-align: justify">
+Sin embargo, identificar de forma creíble los efectos causales requiere tanto encontrar efectos como descartar explicaciones alternativas. por ello, los autores presentan pruebas de una diferencia triple en la que se utiliza una cohorte no tratada como control dentro del estado. Para llevarlo a cabo, los autores seleccionaron a los jóvenes de 25 a 29 años de los mismos estados como grupos de comparación dentro de los estados en lugar de a los jóvenes de 20 a 24 años dado que necesitaban un grupo de edad que estuviera lo suficientemente cerca como para captar las tendencias comunes, pero lo suficientemente lejos como para no violar la SUTVA. Dado que los jóvenes de 15 a 19 años tenían más probabilidades que los de 25 a 29 años de mantener relaciones sexuales con jóvenes de 20 a 24 años, eligieron el grupo ligeramente mayor como control dentro de la etapa. En este caso el modelo planteado fue el siguiente:
+
+$$Y_st = \beta_1Repeals + \beta_2DT_t + \beta_3 Repeal_s DT_t + \delta_1 DA + \delta_2 Repeal_s DA +\delta_{3t}DA.DT_t + \delta_{4t} Repeals_s.DA.DT_t + X_{st}\xi + \alpha_{1s}DS_s + \alpha_{2s}DS_s.DA + \gamma_1t +\gamma_{2s}DS_s.t + \gamma_3DA.t+\gamma_{4s}DS_s.DA.t +\varepsilon_{st}$$
+Dónde el parámetro DDD que estamos estimando es $\delta_{4t}$ (la interacción completa). en el modelo hay 7 variables ficticias separadas porque el parámetro DDD tiene las tres interacciones. Por lo tanto, como hay ocho combinaciones, los autores tuvieron que descartar una como grupo omitido y controlar por separado las otras siete
+<div/>
+
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal  = as_factor(repeal),
+    year    = as_factor(year),
+    fip     = as_factor(fip),
+    fa      = as_factor(fa),
+    younger = as_factor(younger),
+    yr      = as_factor(case_when(repeal == 1 & younger == 1 ~ 1, TRUE ~ 0)),
+    wm      = as_factor(case_when(wht == 1 & male == 1 ~ 1, TRUE ~ 0)),
+    wf      = as_factor(case_when(wht == 1 & male == 0 ~ 1, TRUE ~ 0)),
+    bm      = as_factor(case_when(wht == 0 & male == 1 ~ 1, TRUE ~ 0)),
+    bf      = as_factor(case_when(wht == 0 & male == 0 ~ 1, TRUE ~ 0))
+  ) %>% 
+  filter(bf == 1 & (age == 15 | age == 25))
+
+regddd <- lm_robust(lnr ~ repeal*year + younger*repeal + younger*year + yr*year + fip*t + acc + ir + pi + alcohol + crack + poverty + income + ur,
+                    data = abortion, weights = totpop, clusters = fip)
+
+abortion_plot <- tibble(
+  sd = regddd$std.error[110:124],
+  mean = regddd$coefficients[110:124],
+  year = c(1986:2000))
+
+abortion_plot %>% 
+  ggplot(aes(x = year, y = mean)) + 
+  geom_rect(aes(xmin=1986, xmax=1992, ymin=-Inf, ymax=Inf), fill = "#099B07", alpha = 0.01)+
+  geom_point()+
+  geom_text(aes(label = year), hjust=-0.002, vjust = -0.03)+
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = mean-sd*1.96, ymax = mean+sd*1.96), width = 0.2,
+                position = position_dodge(0.05))
+```
+
+
+<div style="text-align: justify">
+En este gráfico vemos como la predicción empieza a romperse. Aunque hay efectos negativos para los años 1986 a 1990, los coeficientes de 1991 y 1992 son positivos, lo que no concuerda la hipótesis de los autores. Además, sólo los cuatro primeros coeficientes son estadísticamente significativos. Los coeficientes dinámicos DD son capturados por las interacciones derogación-año. 
+<div/>
+<br>
+<div style="text-align: justify">
+Mientras que el estudio original no ahondó más, el autor del libro profundizó en sus hallazgos. En la medida en que las cohortes de principios de la década de 1970 fueron "tratadas en el utero" con la legalización del aborto, el autor afirma que se debería ver no sólo una parábola para las personas de 15 a 19 años de 1986 a 1992, sino también para las de 20 a 24 años de 1991 a 1997, a medida que las cohortes continuaban envejeciendo. De esta forma, incluyó el análisis para la cohorte de 20 a 24 años y mujeres negras (de forma ilustrativa).
+<div/>
+
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+
+abortion <- read_dta("abortion.dta") %>% 
+  mutate(
+    repeal = as_factor(repeal),
+    year   = as_factor(year),
+    fip    = as_factor(fip),
+    fa     = as_factor(fa),
+  )
+
+reg <- abortion %>% 
+  filter(race == 2 & sex == 2 & age == 20) %>% 
+  lm_robust(lnr ~ repeal*year + fip + acc + ir + pi + alcohol+ crack + poverty+ income+ ur,
+            data = ., weights = totpop, clusters = fip)
+#modelsummary::modelsummary(reg, stars= TRUE, fmt=3, 
+#                           estimate = "{estimate}{stars}", statistic=NULL,  gof_omit = "AIC|BIC|Lik")
+abortion_plot <- tibble(
+  sd = reg[[2]][76:90],
+  mean = reg[[1]][76:90],
+  year = c(1986:2000))
+
+abortion_plot %>% 
+  ggplot(aes(x = year, y = mean)) + 
+  geom_rect(aes(xmin=1991, xmax=1997, ymin=-Inf, ymax=Inf), fill = "cyan", alpha = 0.01)+
+  geom_point()+
+  geom_text(aes(label = year), hjust=-0.002, vjust = -0.03)+
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = mean-sd*1.96, ymax = mean+sd*1.96), width = 0.2,
+                position = position_dodge(0.05))
+```
+
+
+<div style="text-align: justify">
+Al correr el modelo, el autor destaca en primer lugar, que aparece una parábola negativa donde no había necesariamente una prevista: el periodo 1986-1992. Nótese que es el periodo en el que sólo las cohortes de 15 a 19 años fueron las tratadas, lo que sugiere que el análisis previo de 15 a 19 años estaba detectando algo distinto a la legalización del aborto. Pero esa era también la justificación para utilizar la DDD, ya que claramente algo más está ocurriendo en los estados de la derogación frente a los de Roe durante esos años que no podemos controlar adecuadamente con nuestra estrategia metodológica.Lo segundo que destaca es que no hay parábola en la ventana de tratamiento para la cohorte de tratamiento. Los tamaños del efecto son negativos al principio, pero disminuyen en valor absoluto cuando deberían estar creciendo. De hecho, el periodo de 1991 a 1997 es de convergencia a cero, no de divergencia entre estos dos conjuntos de estados. Pero como antes, puede que haya fuertes tendencias inobservables para todos los grupos que enmascaren el efecto de la legalización del aborto. 
+<div/>
+<br>
+<div style="text-align: justify">
+Finalmente, el autor detalla los coeficientes estimados de la DDD para la cohorte tratada en relación con una cohorte ligeramente mayor de 25 a 29 años. Es posible que la cohorte de 25 a 29 años esté demasiado cerca en edad para funcionar como un control satisfactorio dentro del estado; si los de 20 a 24 años tienen relaciones sexuales con los de 25 a 29 años, por ejemplo, entonces se viola la SUTVA. Solamente de forma ilustrativa, se presenta al final la tabla de regresion completa.
+<div/>
+
+### 3. conclusión
+<div style="text-align: justify">
+La hipótesis de la legalización del aborto hizo una serie de predicciones sobre dónde deberían aparecer en los datos los efectos parabólicos negativos del tratamiento. Sin embargo, cuando el autor exporó más esas predicciones, los resultados refutaron la hipotesis inicial.
+<div/>
+<br>
+
+### 4. Regresión completa
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal   = as_factor(repeal),
+    year     = as_factor(year),
+    fip      = as_factor(fip),
+    fa       = as_factor(fa),
+    younger2 = case_when(age == 20 ~ 1, TRUE ~ 0),
+    yr2      = as_factor(case_when(repeal == 1 & younger2 == 1 ~ 1, TRUE ~ 0)),
+    wm       = as_factor(case_when(wht == 1 & male == 1 ~ 1, TRUE ~ 0)),
+    wf       = as_factor(case_when(wht == 1 & male == 0 ~ 1, TRUE ~ 0)),
+    bm       = as_factor(case_when(wht == 0 & male == 1 ~ 1, TRUE ~ 0)),
+    bf       = as_factor(case_when(wht == 0 & male == 0 ~ 1, TRUE ~ 0))
+  )
+
+regddd <- abortion %>% 
+  filter(bf == 1 & (age == 20 | age ==25)) %>% 
+  lm_robust(lnr ~ repeal*year + acc + ir + pi + alcohol + crack + poverty + income + ur,
+            data = ., weights = totpop, clusters = fip)
+
+
+modelsummary::modelsummary(regddd, stars= TRUE, fmt=3, 
+                           estimate = "{estimate}{stars}", statistic=NULL,  gof_omit = "AIC|BIC|Lik")
+
+
+```

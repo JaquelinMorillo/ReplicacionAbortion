@@ -1,0 +1,174 @@
+---
+title: "ReplicacionAbortion"
+author: "Jaquelin Morillo"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+```
+
+### 1. Replicación Abortion legalization and long-term gonorrhea incidence 
+https://mixtape.scunning.com/09-difference_in_differences#abortion-legalization-and-long-term-gonorrhea-incidence
+
+_Github:_ https://github.com/JaquelinMorillo/ReplicacionAbortion
+
+#1
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+#-- DD estimate of 15-19 year olds in repeal states vs Roe states
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal = as_factor(repeal),
+    year   = as_factor(year),
+    fip    = as_factor(fip),
+    fa     = as_factor(fa),
+  )
+
+reg <- abortion %>% 
+  filter(bf15 == 1) %>% 
+  lm_robust(lnr ~ repeal*year + fip + acc + ir + pi + alcohol+ crack + poverty+ income+ ur,
+            data = ., weights = totpop, clusters = fip)
+
+abortion_plot <- tibble(
+  sd = reg[[2]][76:90],
+  mean = reg[[1]][76:90],
+  year = c(1986:2000))
+
+abortion_plot %>% 
+  ggplot(aes(x = year, y = mean)) + 
+  geom_rect(aes(xmin=1986, xmax=1992, ymin=-Inf, ymax=Inf), fill = "cyan", alpha = 0.01)+
+  geom_point()+
+  geom_text(aes(label = year), hjust=-0.002, vjust = -0.03)+
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = mean - sd*1.96, ymax = mean + sd*1.96), width = 0.2,
+                position = position_dodge(0.05))
+```
+
+#2
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal  = as_factor(repeal),
+    year    = as_factor(year),
+    fip     = as_factor(fip),
+    fa      = as_factor(fa),
+    younger = as_factor(younger),
+    yr      = as_factor(case_when(repeal == 1 & younger == 1 ~ 1, TRUE ~ 0)),
+    wm      = as_factor(case_when(wht == 1 & male == 1 ~ 1, TRUE ~ 0)),
+    wf      = as_factor(case_when(wht == 1 & male == 0 ~ 1, TRUE ~ 0)),
+    bm      = as_factor(case_when(wht == 0 & male == 1 ~ 1, TRUE ~ 0)),
+    bf      = as_factor(case_when(wht == 0 & male == 0 ~ 1, TRUE ~ 0))
+  ) %>% 
+  filter(bf == 1 & (age == 15 | age == 25))
+
+regddd <- lm_robust(lnr ~ repeal*year + younger*repeal + younger*year + yr*year + fip*t + acc + ir + pi + alcohol + crack + poverty + income + ur,
+                    data = abortion, weights = totpop, clusters = fip)
+
+abortion_plot <- tibble(
+  sd = regddd$std.error[110:124],
+  mean = regddd$coefficients[110:124],
+  year = c(1986:2000))
+
+abortion_plot %>% 
+  ggplot(aes(x = year, y = mean)) + 
+  geom_rect(aes(xmin=1986, xmax=1992, ymin=-Inf, ymax=Inf), fill = "cyan", alpha = 0.01)+
+  geom_point()+
+  geom_text(aes(label = year), hjust=-0.002, vjust = -0.03)+
+  geom_hline(yintercept = 0) +
+  geom_errorbar(aes(ymin = mean-sd*1.96, ymax = mean+sd*1.96), width = 0.2,
+                position = position_dodge(0.05))
+```
+
+#3
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal = as_factor(repeal),
+    year   = as_factor(year),
+    fip    = as_factor(fip),
+    fa     = as_factor(fa),
+  )
+
+reg <- abortion %>% 
+  filter(race == 2 & sex == 2 & age == 20) %>% 
+  lm_robust(lnr ~ repeal*year + fip + acc + ir + pi + alcohol+ crack + poverty+ income+ ur,
+            data = ., weights = totpop, clusters = fip)
+modelsummary::modelsummary(reg, stars= TRUE, fmt=3, 
+                           estimate = "{estimate}{stars}", statistic=NULL,  gof_omit = "AIC|BIC|Lik")
+
+```
+
+#4
+```{r, echo=FALSE, message = FALSE, warning = FALSE}
+library(tidyverse)
+library(haven)
+library(estimatr)
+
+read_data <- function(df)
+{
+  full_path <- paste("https://raw.github.com/scunning1975/mixtape/master/", 
+                     df, sep = "")
+  df <- read_dta(full_path)
+  return(df)
+}
+
+abortion <- read_data("abortion.dta") %>% 
+  mutate(
+    repeal   = as_factor(repeal),
+    year     = as_factor(year),
+    fip      = as_factor(fip),
+    fa       = as_factor(fa),
+    younger2 = case_when(age == 20 ~ 1, TRUE ~ 0),
+    yr2      = as_factor(case_when(repeal == 1 & younger2 == 1 ~ 1, TRUE ~ 0)),
+    wm       = as_factor(case_when(wht == 1 & male == 1 ~ 1, TRUE ~ 0)),
+    wf       = as_factor(case_when(wht == 1 & male == 0 ~ 1, TRUE ~ 0)),
+    bm       = as_factor(case_when(wht == 0 & male == 1 ~ 1, TRUE ~ 0)),
+    bf       = as_factor(case_when(wht == 0 & male == 0 ~ 1, TRUE ~ 0))
+  )
+
+regddd <- abortion %>% 
+  filter(bf == 1 & (age == 20 | age ==25)) %>% 
+  lm_robust(lnr ~ repeal*year + acc + ir + pi + alcohol + crack + poverty + income + ur,
+            data = ., weights = totpop, clusters = fip)
+
+
+modelsummary::modelsummary(regddd, stars= TRUE, fmt=3, 
+                           estimate = "{estimate}{stars}", statistic=NULL,  gof_omit = "AIC|BIC|Lik")
+```
