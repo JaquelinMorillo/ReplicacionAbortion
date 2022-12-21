@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jaquelin Morillo" />
+
+<meta name="date" content="2022-12-21" />
+
+<title>Replicación Abortion legalization and long-term gonorrhea incidence</title>
+
+<script src="ReplicacionAbortion2_files/header-attrs-2.14/header-attrs.js"></script>
+<script src="ReplicacionAbortion2_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="ReplicacionAbortion2_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="ReplicacionAbortion2_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="ReplicacionAbortion2_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="ReplicacionAbortion2_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="ReplicacionAbortion2_files/navigation-1.1/tabsets.js"></script>
+<link href="ReplicacionAbortion2_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="ReplicacionAbortion2_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Replicación Abortion legalization and
+long-term gonorrhea incidence</h1>
+<h4 class="author">Jaquelin Morillo</h4>
+<h4 class="date">2022-12-21</h4>
+
+</div>
+
+
+<p><a
+href="https://mixtape.scunning.com/09-difference_in_differences#abortion-legalization-and-long-term-gonorrhea-incidence"
+class="uri">https://mixtape.scunning.com/09-difference_in_differences#abortion-legalization-and-long-term-gonorrhea-incidence</a></p>
+<p><em>Github:</em> <a
+href="https://github.com/JaquelinMorillo/ReplicacionAbortion"
+class="uri">https://github.com/JaquelinMorillo/ReplicacionAbortion</a></p>
+<div id="introducción" class="section level3">
+<h3>1. Introducción</h3>
+<div style="text-align: justify">
+Gruber, Levine y Staiger (1999) querían conocer las características del
+niño marginal abortado si hubiera llegado a la adolescencia. Los autores
+descubrieron que el niño marginal abortado tenía un 60% más de
+probabilidades de crecer en un hogar monoparental, un 50% más de
+probabilidades de vivir en la pobreza y un 45% más de probabilidades de
+recibir asistencia social. Está claro que el aborto precoz tiene un
+fuerte efecto de selección de las familias con menos recursos. En esta
+linea, Levitt (2004) atribuyó hasta un 10% del descenso de la
+delincuencia entre 1991 y 2001 a la legalización del aborto en los años
+setenta.Este estudio fue, como era de esperar, increíblemente
+controvertido. Si bien muchas de las críticas fueron infundadas desde
+una perspectiva científica, otras se enfocaron en el propio diseño y
+ejecución de la investigación. Por ejemplo, Ted Joyce (2009), experto en
+salud reproductiva, puso en duda la hipótesis aborto-delito utilizando
+un diseño Diseño de tendencias paralelas (DDD) (Joyce 2009) Argumentando
+que si la legalización del aborto tuviera una selección negativa tan
+extrema, entonces no debería aparecer sólo en la delincuencia sino
+también en otras dimensiones del análisis. En este marco, Cunningham y
+Cornwell (2013) estimó los efectos de la legalización del aborto en la
+incidencia de la gonorrea a largo plazo.
+<div/>
+<br>
+<div style="text-align: justify">
+A diferencia de Donohue y Levitt (2001) en cuyo estudio utilizaron
+valores retardados a nivel estatal de un coeficiente de
+aborto,Cunningham y Cornwell (2013) utilizaron diferencias en
+diferencias. Para ello los autores explotaron la derogación temprana del
+aborto en cinco estados en 1970 y los compararon con los estados que
+fueron legalizados bajo Roe v. Wade en 1973. Se utilizaron los datos de
+gonorrea de los Centros para el Control y la Prevención de Enfermedades
+de los Estados Unidos (CDC) desglosados en categorías de edad de cinco
+años (por ejemplo, 15-19 años, 20-24 años). La teoría de la legalización
+del aborto predijo la forma de los efectos del tratamiento observado en
+una adopción escalonada. En concreto, deberíamos observar efectos de
+tratamiento no lineales. Estos efectos de tratamiento deberían ser cada
+vez más negativos de 1986 a 1989, estabilizarse de 1989 a 1991, y luego
+disiparse gradualmente hasta 1992. En otras palabras, la hipótesis de la
+legalización del aborto predice un efecto parabólico del tratamiento a
+medida que las cohortes tratadas se mueven a través de la distribución
+de edades. Si no es posible encontrar pruebas de una parábola negativa
+durante esta ventana específica y estrecha, entonces la hipótesis de la
+legalización del aborto está más cerca de ser falseada.
+<div/>
+
+</div>
+<div id="modelo" class="section level3">
+<h3>2. Modelo</h3>
+<div style="text-align: justify">
+<p>En este contexto, los autores plantearon el siguiente modelo:</p>
+<span class="math display">\[Y_st = \beta_1Repeals + \beta_2DT_t +
+\beta_3 Repeal_s DT_t + X_st\psi +\alpha_sDS_s+\varepsilon_{st}\]</span>
+donde <span class="math inline">\(Y\)</span> es el número logarítmico de
+nuevos casos de gonorrea en jóvenes de 15 a 19 años (por cada 100.000
+habitantes); <span class="math inline">\(Repeal_s\)</span> es igual a 1
+si el estado legalizó el aborto antes de Roe; <span
+class="math inline">\(DT_t\)</span> es una variable dummy de año; <span
+class="math inline">\(DS_s\)</span> es una variable dummy de estado;
+<span class="math inline">\(t\)</span> es una tendencia temporal; <span
+class="math inline">\(X\)</span> es una matriz de covariables. En el
+documento, a veces incluía tendencias lineales específicas del estado,
+pero para este análisis, presento el modelo más simple. Por último,
+<span class="math inline">\(\varepsilon_{st}\)</span> es un término de
+error estructural que se supone condicionalmente independiente de los
+regresores. Además, todos los errores estándar fueron agruparon a nivel
+estatal, lo que permite una correlación serial arbitraria.
+<div/>
+<br>
+<div style="text-align: justify">
+A contuinuación se presentan los coeficientes de forma gráfica, donde es
+posible observar qye hay un efecto negativo durante la ventana en la que
+Roe no se ha puesto totalmente al día, y ese efecto negativo forma una
+parábola, tal y como predecía nuestra teoría.
+<div/>
+
+<p><img src="ReplicacionAbortion2_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<div style="text-align: justify">
+<p>Sin embargo, identificar de forma creíble los efectos causales
+requiere tanto encontrar efectos como descartar explicaciones
+alternativas. por ello, los autores presentan pruebas de una diferencia
+triple en la que se utiliza una cohorte no tratada como control dentro
+del estado. Para llevarlo a cabo, los autores seleccionaron a los
+jóvenes de 25 a 29 años de los mismos estados como grupos de comparación
+dentro de los estados en lugar de a los jóvenes de 20 a 24 años dado que
+necesitaban un grupo de edad que estuviera lo suficientemente cerca como
+para captar las tendencias comunes, pero lo suficientemente lejos como
+para no violar la SUTVA. Dado que los jóvenes de 15 a 19 años tenían más
+probabilidades que los de 25 a 29 años de mantener relaciones sexuales
+con jóvenes de 20 a 24 años, eligieron el grupo ligeramente mayor como
+control dentro de la etapa. En este caso el modelo planteado fue el
+siguiente:</p>
+<span class="math display">\[Y_st = \beta_1Repeals + \beta_2DT_t +
+\beta_3 Repeal_s DT_t + \delta_1 DA + \delta_2 Repeal_s DA
++\delta_{3t}DA.DT_t + \delta_{4t} Repeals_s.DA.DT_t + X_{st}\xi +
+\alpha_{1s}DS_s + \alpha_{2s}DS_s.DA + \gamma_1t +\gamma_{2s}DS_s.t +
+\gamma_3DA.t+\gamma_{4s}DS_s.DA.t +\varepsilon_{st}\]</span> Dónde el
+parámetro DDD que estamos estimando es <span
+class="math inline">\(\delta_{4t}\)</span> (la interacción completa). en
+el modelo hay 7 variables ficticias separadas porque el parámetro DDD
+tiene las tres interacciones. Por lo tanto, como hay ocho combinaciones,
+los autores tuvieron que descartar una como grupo omitido y controlar
+por separado las otras siete
+<div/>
+
+
+<p><img src="ReplicacionAbortion2_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div style="text-align: justify">
+En este gráfico vemos como la predicción empieza a romperse. Aunque hay
+efectos negativos para los años 1986 a 1990, los coeficientes de 1991 y
+1992 son positivos, lo que no concuerda la hipótesis de los autores.
+Además, sólo los cuatro primeros coeficientes son estadísticamente
+significativos. Los coeficientes dinámicos DD son capturados por las
+interacciones derogación-año.
+<div/>
+<br>
+<div style="text-align: justify">
+Mientras que el estudio original no ahondó más, el autor del libro
+profundizó en sus hallazgos. En la medida en que las cohortes de
+principios de la década de 1970 fueron “tratadas en el utero” con la
+legalización del aborto, el autor afirma que se debería ver no sólo una
+parábola para las personas de 15 a 19 años de 1986 a 1992, sino también
+para las de 20 a 24 años de 1991 a 1997, a medida que las cohortes
+continuaban envejeciendo. De esta forma, incluyó el análisis para la
+cohorte de 20 a 24 años y mujeres negras (de forma ilustrativa).
+<div/>
+
+<p><img src="ReplicacionAbortion2_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div style="text-align: justify">
+Al correr el modelo, el autor destaca en primer lugar, que aparece una
+parábola negativa donde no había necesariamente una prevista: el periodo
+1986-1992. Nótese que es el periodo en el que sólo las cohortes de 15 a
+19 años fueron las tratadas, lo que sugiere que el análisis previo de 15
+a 19 años estaba detectando algo distinto a la legalización del aborto.
+Pero esa era también la justificación para utilizar la DDD, ya que
+claramente algo más está ocurriendo en los estados de la derogación
+frente a los de Roe durante esos años que no podemos controlar
+adecuadamente con nuestra estrategia metodológica.Lo segundo que destaca
+es que no hay parábola en la ventana de tratamiento para la cohorte de
+tratamiento. Los tamaños del efecto son negativos al principio, pero
+disminuyen en valor absoluto cuando deberían estar creciendo. De hecho,
+el periodo de 1991 a 1997 es de convergencia a cero, no de divergencia
+entre estos dos conjuntos de estados. Pero como antes, puede que haya
+fuertes tendencias inobservables para todos los grupos que enmascaren el
+efecto de la legalización del aborto.
+<div/>
+<br>
+<div style="text-align: justify">
+Finalmente, el autor detalla los coeficientes estimados de la DDD para
+la cohorte tratada en relación con una cohorte ligeramente mayor de 25 a
+29 años. Es posible que la cohorte de 25 a 29 años esté demasiado cerca
+en edad para funcionar como un control satisfactorio dentro del estado;
+si los de 20 a 24 años tienen relaciones sexuales con los de 25 a 29
+años, por ejemplo, entonces se viola la SUTVA.
+<div/>
+
+<p><img src="ReplicacionAbortion2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="conclusión" class="section level3">
+<h3>3. conclusión</h3>
+<div style="text-align: justify">
+La hipótesis de la legalización del aborto hizo una serie de
+predicciones sobre dónde deberían aparecer en los datos los efectos
+parabólicos negativos del tratamiento. Sin embargo, cuando el autor
+exporó más esas predicciones, los resultados refutaron la hipotesis
+inicial.
+<div/>
+<p><br></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
